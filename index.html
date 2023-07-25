@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Coherent Breathing</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      h1 {
+        font-size: 6em;
+        margin-bottom: 0;
+      }
+
+      #timer {
+        font-size: 10em;
+        text-align: center;
+        margin: 0;
+		color: green;
+      }      
+	  #breath {
+        font-size: 4em;
+        text-align: center;
+        margin: 0;
+      }
+
+      #full-time {
+        margin-top: 10px;
+        font-size: 1.5em;
+        color: gray;
+        margin-bottom: 20px;
+      }
+
+      #inhale-exhale-range {
+        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+
+      #inhale-exhale-value {
+        margin-top: 0;
+        font-size: 1.5em;
+        color: gray;
+        margin-bottom: 20px;
+      }
+
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 1em;
+        border-radius: 5px;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Coherent Breathing</h1>
+      <p id="timer">0.0</p>
+      <p id="breath"></p>
+      <p id="full-time">Session time: 00:00:00</p>
+      <input id="inhale-exhale-range" type="range" min="3" max="10" step="0.5" value="5.5" onchange="updateInhaleExhalePeriod()">
+      <p id="inhale-exhale-value"></p>
+      <button onclick="reset()">Reset</button>
+    </div>
+
+    <script>
+      const timerElement = document.getElementById('timer');
+      const breathElement = document.getElementById('breath');
+      const fullTimeElement = document.getElementById('full-time');
+      const inhaleExhaleRange = document.getElementById('inhale-exhale-range');
+      const inhaleExhaleValue = document.getElementById('inhale-exhale-value');
+      let time = 0;
+      let inhale = true;
+      let sessionTime = 0;
+      let inhaleExhalePeriod = parseFloat(inhaleExhaleRange.value);
+
+      setInterval(() => {
+        time += 0.1;
+        timerElement.innerText = time.toFixed(1);
+
+        if (time >= inhaleExhalePeriod) {
+          time = 0;
+          if (inhale) {
+            inhale = false;
+          } else {
+            inhale = true;
+          }
+        }
+
+        if (inhale) {
+          breathElement.innerText = 'Inhale';
+        } else {
+          breathElement.innerText = 'Exhale';
+        }
+      }, 100);
+
+      setInterval(() => {
+        sessionTime += 1;
+        const hours = Math.floor(sessionTime / 3600);
+        const minutes = Math.floor((sessionTime % 3600) / 60);
+        const seconds = sessionTime % 60;
+        fullTimeElement.innerText = `Session time: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+
+      function reset() {
+        time = 0;
+        inhale = true;
+        sessionTime = 0;
+        breathElement.innerText = 'Inhale';
+        fullTimeElement.innerText = 'Session time: 00:00:00';
+        timerElement.innerText = '0.0';
+      }
+
+      function updateInhaleExhalePeriod() {
+        inhaleExhalePeriod = parseFloat(inhaleExhaleRange.value);
+        inhaleExhaleValue.innerText = `${inhaleExhalePeriod.toFixed(1)} seconds`;
+      }
+
+      inhaleExhaleValue.innerText = `${inhaleExhalePeriod.toFixed(1)} seconds`;
+    </script>
+  </body>
+</html>
